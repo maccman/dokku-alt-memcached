@@ -1,0 +1,7 @@
+#!/bin/bash
+
+source "$(dirname $0)/vars"
+
+memcached_for_app "$1"
+remove_container "$DB_CONTAINER" "$DB_DATA_CONTAINER"
+rm -rf "$DB_VOLUME"

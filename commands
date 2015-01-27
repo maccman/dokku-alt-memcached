@@ -1,0 +1,53 @@
+#!/bin/bash
+
+source "$(dirname $0)/vars"
+
+case "$1" in
+  memcached:create)
+    memcached_for_app "$2"
+    verify_max_args 2 "$@"
+
+    touch "$DB_VOLUME"
+    info "Memcache database created: $DB_CONTAINER"
+    redeploy_app "$APP"
+    ;;
+
+  memcached:delete|memcached:destroy)
+    memcached_for_app "$2"
+    verify_max_args 2 "$@"
+
+    stop_and_remove_container "$DB_CONTAINER" "$DB_DATA_CONTAINER"
+    rm -f "$DB_VOLUME"
+    info "Memcache database deleted: $DB_CONTAINER"
+    redeploy_app "$APP"
+    ;;
+
+  memcached:info)
+    memcached_for_app "$2"
+    verify_max_args 2 "$@"
+
+    [[ ! -f "$DB_VOLUME" ]] && fail "$DB_CONTAINER: database is not linked to $APP"
+
+    echo
+    cat <<EOF
+echo "       Host: $DB_HOST"
+echo "       Port: $DB_PORT"
+echo
+echo "       MEMCACHE_SERVERS=$DB_URL"
+EOF
+    echo
+    ;;
+
+  help)
+    cat && cat<<EOF
+    memcached:create <app>          Create a Memcache database
+    memcached:delete <app>          Delete specified Memcache database
+    memcached:info <app>            Display application information
+EOF
+    ;;
+
+  *)
+    exit $DOKKU_NOT_IMPLEMENTED_EXIT
+    ;;
+
+esac

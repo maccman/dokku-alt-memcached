@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+source "$(dirname $0)/vars"
+
+memcached_for_app "$1"
+
+cat
+
+if [[ -f "$DB_VOLUME" ]]; then
+	echo "MEMCACHE_SERVERS=$DB_HOST:$DB_PORT"
+fi
