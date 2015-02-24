@@ -6,8 +6,8 @@ Project: https://github.com/progrium/dokku
 Installation
 ------------
 ```
-cd /var/lib/dokku/plugins
-git clone https://github.com/luxifer/dokku-memcached-plugin memcached
+cd /var/lib/dokku-alt/plugins
+git clone https://github.com/maccman/dokku-alt-memcached memcached
 dokku plugins-install
 ```
 
